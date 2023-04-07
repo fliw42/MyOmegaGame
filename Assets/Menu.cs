@@ -5,9 +5,7 @@ using Cinemachine;
 using UnityEditor.Rendering;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
-using Button = UnityEngine.UI.Button;
+using UnityEngine.UI;
 using Cursor = UnityEngine.Cursor;
 
 public class Menu : MonoBehaviour
@@ -17,11 +15,18 @@ public class Menu : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera _cameraFollow;
     [SerializeField] private Transform _transform;
     [SerializeField] private Button _continue;
-    [SerializeField] private GameObject _settings;
+    [Space]
+    [Header("Settings")]
+    [SerializeField] private Image _settingsContent;
     [SerializeField] private Button _settingsButton;
+    [Space]
+    [Header("Save")]
     [SerializeField] private Button _save;
+    [Space]
+    [Header("Exit")]
     [SerializeField] private Button _exit;
-    
+    [SerializeField] private Slider _slider;
+
     // Update is called once per frame
     void Update()
     {
@@ -45,9 +50,24 @@ public class Menu : MonoBehaviour
             }
         }
     }
-    public void onClick()
+
+    private void OnEnable()
     {
+        _settingsButton.onClick.AddListener(Button_SettingsClicked);
+        _settingsContent.gameObject.SetActive(false);
+        _slider.onValueChanged.AddListener(Slider_OnValueChanged);
+        _slider.value = AudioListener.volume;
+    }
+    private void Button_SettingsClicked()
+    {
+        _settingsContent.gameObject.SetActive(!_settingsContent.gameObject.activeSelf);
         _menu.SetActive(false);
+        
+    }
+
+    private void Slider_OnValueChanged(float value)
+    {
+        AudioListener.volume = value;
     }
 
 }
